@@ -124,7 +124,6 @@ enum LexicalState {
   Any, FindNewLine, Symbol, Identifier, String, Char, Integer, Decimal
 }
 
-#[allow(unused_assignments)]
 impl Lexer {
   pub fn new() -> Self {
     Lexer {
