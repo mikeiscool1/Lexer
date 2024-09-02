@@ -113,7 +113,6 @@ pub struct Token {
   pub end: Location
 }
 
-#[allow(dead_code)]
 pub struct Lexer {
   pub tokens: Vec<Token>,
   location: Location,
