@@ -1,0 +1,160 @@
+const a = 5;
+let a = 5;
+
+const a: int64 = 0xF;
+const string = "a is equal to {a}.";
+// string is of type String
+// There are no string literals
+// All strings are in the String class which extends the Vector class
+const array = [5, 4, 32, 1];
+let vector = (5, 4, 32, 1);
+vector.add(7);
+
+// $ is used to attach a trait.
+$(ToString, Add)
+struct Point {
+  x: int64;
+  y: int64;
+
+  init(#, x: int64, y: int64) {
+    #x = x;
+    #y = y;
+  }
+
+  // trait implementation for trait ToString
+  fun toString(const #) {
+    ret "({#x}, {#y})";
+  }
+
+  // # means self, const # means self is const.
+  fun add(const #, point: const &Point) {
+    ret Point(#x + point.x, #y + point.y);
+  }
+
+  fun example(); // no definition = pure virtual
+}
+
+abstract struct Example {
+  ...
+}
+
+for i = 0; i < 10; i++;
+for i in 0 to 10;
+for i to 10 {
+  continue;
+  break;
+}
+
+jump forward;
+
+forward:
+
+struct Point3D : Point {
+  z: int64;
+
+  init(#, x: int64, y: int64, z: int64) {
+    super(x, y);
+    #z = z;
+  }
+
+  fun toString(const #) {
+    ret "({#x}, {#y}, {#z})"
+  }
+
+  fun add(const #, point: const &Point3D) {
+    ret Point3D(#x + point.x, #y + point.y, #z + point.z);
+  }
+}
+
+let p1 = Point(5, 5);
+let p2 = Point(2, -3);
+let p3 = p1 + p2;
+
+let positive: uint32 = 5;
+
+fun inc(): void {
+  static count = 0;
+  ret ++count;
+}
+
+enum Option {
+  Left, Right, Up, Down
+}
+
+let option = Option::Left;
+
+switch option {
+  case Option::Left {
+    break;
+  }
+
+  case Option::Right {
+    break;
+  }
+
+  case Option::Left, Option::Right {
+    break;
+  }
+
+  default {
+    break;
+  }
+}
+
+// some basic log operators we haven't gone over
+
+if true || false && (5 | 3) {
+  std::print("Awesome");
+} elif false {
+  std::print("Nice");
+} else {
+  std::print("Cool");
+}
+
+if true: print("Nice inline statement");
+
+let b = true ? 3 : 5;
+
+const fn add(a: int32, b: int32) {
+  ret a + b;
+}
+
+add(5, 5) // expands to 10 because it is calculated at compile time
+
+const map = std::map();
+
+// Dynamic memory allocation
+
+const safePointer = std::ptr(5);
+const safeUninitializedPtr = std::ptr<int32>();
+const sharedPtr = std::ptr_shared(5);
+const rawPtr = new int32;
+delete rawPtr;
+
+// Example of a reimplementation of std::ptr
+
+namespace std {
+  <T>
+  $(Dereference)
+  struct ptr {
+    data: *T;
+
+    init(#) {
+      #data = new T;
+    }
+
+    init(#, data: T) {
+      #data = new T;
+      *#data = data;
+    }
+
+    // deconstructor
+    delete(#) {
+      delete data;
+    }
+
+    fun deref(const #) {
+      ret #data;
+    }
+  }
+}
