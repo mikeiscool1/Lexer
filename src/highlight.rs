@@ -10,10 +10,10 @@ const CYAN: &str = "\x1b[36m";
 const PURPLE: &str = "\x1b[35m";
 const RESET: &str = "\x1b[0m";
 
-fn get_key_from_value<K: Clone, V: PartialEq>(map: &HashMap<K, V>, value: &V) -> Option<K> {
+fn get_key_from_value<'a, K: Clone, V: PartialEq>(map: &'a HashMap<K, V>, value: &V) -> Option<&'a K> {
   for (key, val) in map.iter() {
     if *val == *value {
-      return Some(key.clone());
+      return Some(key);
     }
   }
 
@@ -37,15 +37,15 @@ pub fn print_tokens(tokens: &Vec<Token>) {
 
     match &token.value {
       ValueVariant::Symbol(s) => {
-        let key = get_key_from_value(&SYMBOLS, &s).expect("Could not find symbol.");
+        let key = *get_key_from_value(&SYMBOLS, &s).expect("Could not find symbol.");
         print!("{}", key);
       },
       ValueVariant::Keyword(k) => {
-        let key = get_key_from_value(&KEYWORDS, &k).expect("Could not find keyword.");
+        let key = *get_key_from_value(&KEYWORDS, &k).expect("Could not find keyword.");
         print!("{}{}{}", PURPLE, key, RESET);
       },
       ValueVariant::Type(t) => {
-        let key = get_key_from_value(&TYPES, &t).expect("Could not find type.");
+        let key = *get_key_from_value(&TYPES, &t).expect("Could not find type.");
         print!("{}{}{}", PURPLE, key, RESET);
       },
       ValueVariant::Identifier(id) => {
@@ -75,7 +75,7 @@ pub fn print_tokens(tokens: &Vec<Token>) {
           if let Some(escape_code) = get_key_from_value(&STR_ESCAPE_CODES, &c) {
             new_str.push_str(CYAN);
             new_str.push('\\');
-            new_str.push(escape_code);
+            new_str.push(*escape_code);
             new_str.push_str(GREEN);
           } else { new_str.push(c); }
         }

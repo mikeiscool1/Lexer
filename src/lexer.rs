@@ -199,7 +199,7 @@ impl Lexer {
         LexicalState::Symbol => {
           if accumulator == "-" && self.tokens.len() > 0 && character.is_ascii_digit() {
             // If a number is before the -, use the MINUS operator instead of a negative number.
-            let variant = self.tokens.last().unwrap().value.clone();
+            let variant = &self.tokens.last().unwrap().value;
 
             match variant {
               ValueVariant::Integer(_) | ValueVariant::Decimal(_) | ValueVariant::Identifier(_) => {
